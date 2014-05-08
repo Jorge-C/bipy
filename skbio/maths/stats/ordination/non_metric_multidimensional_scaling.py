@@ -69,13 +69,13 @@ class NMDS(Ordination):
         self.min_abs_stress = min_abs_stress
 
         if dimension >= len(distance_matrix) - 1:
-            raise RuntimeError("NMDS requires N-1 dimensions or fewer, "+\
-             "where N is the number of samples, or rows in the dissim matrix"+\
-             " got %s rows for a %s dimension NMDS" % \
-                               (len(distance_matrix), dimension))
+            raise RuntimeError(
+                "NMDS requires N-1 dimensions or fewer, where N is the number"
+                " of samples, or rows in the dissim matrix got {0} rows for a"
+                "{1} dimension NMDS".format(len(distance_matrix), dimension))
 
         if rand_seed != None:
-            seed(rand_seed)
+            np.seed(rand_seed)
 
         self.verbosity = verbosity
         num_points = len(distance_matrix)
@@ -91,9 +91,8 @@ class NMDS(Ordination):
         if initial_pts == "random":
             self.points = self._get_initial_pts(dimension, point_range)
         elif initial_pts == "pcoa":
-            pcoa_pts, pcoa_eigs = principal_coordinates_analysis(\
-                                                                 distance_matrix)
-            order = argsort(pcoa_eigs)[::-1] # pos to small/neg
+            pcoa_pts, pcoa_eigs = principal_coordinates_analysis(distance_matrix)
+            order = np.argsort(pcoa_eigs)[::-1] # pos to small/neg
             pcoa_pts = pcoa_pts[order].T
             self.points = pcoa_pts[:,:dimension]
         else:
@@ -294,7 +293,7 @@ class NMDS(Ordination):
         """ assumes centered, rescales to mean ot-origin dist of 1
         """
 
-        factor = np.array([norm(vec) for vec in self.points]).mean()
+        factor = np.array([np.linalg.norm(vec) for vec in self.points]).mean()
         self.points = self.points/factor
 
     def _move_points(self):
@@ -361,7 +360,7 @@ class NMDS(Ordination):
         escape.
         """
         num_rows, num_cols = self.points.shape
-        avg_point_dist = np.sum([norm(point) for point in self.points])/num_rows
+        avg_point_dist = np.sum([np.linalg.norm(point) for point in self.points])/num_rows
         step_size = avg_point_dist*rel_step_size
 
 
