@@ -312,7 +312,7 @@ class NMDS(Ordination):
         - if stress decreased, continue in the same manner, otherwise
         move points in a different manner
 
-        self.points often serves as a starting point for optimizaion algorithms
+        self.points often serves as a starting point for optimization algorithms
 
         optimization algorithm 0 is justin's hack (steepest descent method)
         """
