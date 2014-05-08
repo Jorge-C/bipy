@@ -72,7 +72,7 @@ class NMDS(Ordination):
         self.min_rel_improvement = min_rel_improvement
         self.min_abs_stress = min_abs_stress
 
-        if dimension >= len(distance_matrix) - 1:
+        if dimension >= distance_matrix.shape[0] - 1:
             raise RuntimeError(
                 "NMDS requires N-1 dimensions or fewer, where N is the number"
                 " of samples, or rows in the dissim matrix got {0} rows for a"
@@ -82,7 +82,7 @@ class NMDS(Ordination):
             np.seed(rand_seed)
 
         self.verbosity = verbosity
-        num_points = len(distance_matrix)
+        num_points = distance_matrix.shape[0]
         point_range = range(num_points)
         self.dimension = dimension
         self.optimization_method = optimization_method
