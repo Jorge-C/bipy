@@ -344,7 +344,7 @@ class NMDS(Ordination):
                     # floor
                     maxiter = int(maxiter/2)
 
-            self.points = optpts.reshape((numrows, numcols))
+            self.points = optpts.x.reshape((numrows, numcols))
         else:
             raise ValueError
 
