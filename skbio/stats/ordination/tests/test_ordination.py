@@ -863,6 +863,114 @@ class TestOrdinationResults(unittest.TestCase):
         assert_is_instance(self.min_ord_results.svg, SVG)
 
 
+class TestNMDSErrors(object):
+    pass
+
+class TestNMDSResults(object):
+    def setup(self):
+        self.mtx = np.array([[0, 3, 4, 8],
+                             [3, 0, 1, 27],
+                             [4, 1, 0, 3.5],
+                             [8, 27, 3.5, 0]])
+        self.nm = NMDS(self.mtx, verbosity=0)
+                        
+    def test_getStress(self):
+        """stress should be small
+        
+        this is preliminary, better to check for convergence to similar states
+        with random starting points enabled"""
+        stress = self.nm.getStress()
+        self.assertLessThan(stress, 1e-1)
+
+    def test_getPoints(self):
+        """points should be of the right number and dimensionality
+        
+        this is preliminary, better to check for convergence to similar states
+        with random starting points enabled"""
+        pts = self.nm.getPoints()
+        self.assertEqual(size(pts, 0), 4)
+        self.assertEqual(size(pts, 1), 2)
+
+    def test_2(self):
+        """l19 data should give stress below .13"""
+        ptmtx = array(
+            [[7,1,0,0,0,0,0,0,0],
+            [4,2,0,0,0,1,0,0,0],
+            [2,4,0,0,0,1,0,0,0],
+            [1,7,0,0,0,0,0,0,0],
+            [0,8,0,0,0,0,0,0,0],
+            [0,7,1,0,0,0,0,0,0],#idx 5
+            [0,4,2,0,0,0,2,0,0],
+            [0,2,4,0,0,0,1,0,0],
+            [0,1,7,0,0,0,0,0,0],
+            [0,0,8,0,0,0,0,0,0],
+            [0,0,7,1,0,0,0,0,0],#idx 10
+            [0,0,4,2,0,0,0,3,0],
+            [0,0,2,4,0,0,0,1,0],
+            [0,0,1,7,0,0,0,0,0],
+            [0,0,0,8,0,0,0,0,0],
+            [0,0,0,7,1,0,0,0,0],#idx 15
+            [0,0,0,4,2,0,0,0,4],
+            [0,0,0,2,4,0,0,0,1],
+            [0,0,0,1,7,0,0,0,0]], 'float')
+        distmtx = dist_euclidean(ptmtx)
+        nm = NMDS(distmtx, verbosity=0)
+        self.assertLessThan(nm.getStress(), .13)
+    
+    def test_3(self):
+        """l19 data should give stress below .13 in multi-D"""
+        ptmtx = array(
+            [[7,1,0,0,0,0,0,0,0],
+            [4,2,0,0,0,1,0,0,0],
+            [2,4,0,0,0,1,0,0,0],
+            [1,7,0,0,0,0,0,0,0],
+            [0,8,0,0,0,0,0,0,0],
+            [0,7,1,0,0,0,0,0,0],#idx 5
+            [0,4,2,0,0,0,2,0,0],
+            [0,2,4,0,0,0,1,0,0],
+            [0,1,7,0,0,0,0,0,0],
+            [0,0,8,0,0,0,0,0,0],
+            [0,0,7,1,0,0,0,0,0],#idx 10
+            [0,0,4,2,0,0,0,3,0],
+            [0,0,2,4,0,0,0,1,0],
+            [0,0,1,7,0,0,0,0,0],
+            [0,0,0,8,0,0,0,0,0],
+            [0,0,0,7,1,0,0,0,0],#idx 15
+            [0,0,0,4,2,0,0,0,4],
+            [0,0,0,2,4,0,0,0,1],
+            [0,0,0,1,7,0,0,0,0]], 'float')
+        distmtx = dist_euclidean(ptmtx)
+        for dim in range(3,18):
+            nm = NMDS(distmtx, verbosity=0, dimension=dim)
+            self.assertLessThan(nm.getStress(), .13)
+
+    def test_metaNMDS(self):
+        """l19 data should give stress below .13"""
+        ptmtx = array(
+            [[7,1,0,0,0,0,0,0,0],
+            [4,2,0,0,0,1,0,0,0],
+            [2,4,0,0,0,1,0,0,0],
+            [1,7,0,0,0,0,0,0,0],
+            [0,8,0,0,0,0,0,0,0],
+            [0,7,1,0,0,0,0,0,0],#idx 5
+            [0,4,2,0,0,0,2,0,0],
+            [0,2,4,0,0,0,1,0,0],
+            [0,1,7,0,0,0,0,0,0],
+            [0,0,8,0,0,0,0,0,0],
+            [0,0,7,1,0,0,0,0,0],#idx 10
+            [0,0,4,2,0,0,0,3,0],
+            [0,0,2,4,0,0,0,1,0],
+            [0,0,1,7,0,0,0,0,0],
+            [0,0,0,8,0,0,0,0,0],
+            [0,0,0,7,1,0,0,0,0],#idx 15
+            [0,0,0,4,2,0,0,0,4],
+            [0,0,0,2,4,0,0,0,1],
+            [0,0,0,1,7,0,0,0,0]], 'float')
+        distmtx = dist_euclidean(ptmtx)
+        nm = metaNMDS(1, distmtx, verbosity=0)
+        self.assertLessThan(nm.getStress(), .13)
+
+
 if __name__ == '__main__':
     import nose
     nose.runmodule()
