@@ -142,9 +142,9 @@ class NMDS(Ordination):
         # center and rotate the points, since pos, rotation is arbitrary
         # rotation is to align to principal axes of self.points
         self.points = self._center(self.points)
-        u,s,vh = svd(self.points, full_matrices=False)
-        S = diag(s)
-        self.points = dot(u,S)
+        u,s,vh = np.linalg.svd(self.points, full_matrices=False)
+        S = np.diag(s)
+        self.points = np.dot(u,S)
         # normalize the scaling, which should not change the stress
         self._rescale()
 
@@ -187,8 +187,8 @@ class NMDS(Ordination):
         that the center of mass of the row vectors is centered at the origin.
         Returns a numpy float ('d') array
         """
-        result = array(mtx, 'd')
-        result -= mean(result, 0)
+        result = np.array(mtx, np.float64)
+        result -= np.mean(result, axis=0)
         # subtract each column's mean from each element in that column
         return result
 
@@ -221,9 +221,9 @@ class NMDS(Ordination):
 
     def _calc_distances(self):
         """Update distances between the points"""
-        diffv = self.points[newaxis, :, :] - self.points[:, newaxis, :]
+        diffv = self.points[np.newaxis, :, :] - self.points[:, newaxis, :]
         squared_dists = (diffv**2).sum(axis=-1)
-        self._dists = sqrt(squared_dists)
+        self._dists = np.sqrt(squared_dists)
         self._squared_dist_sums = squared_dists.sum(axis=-1)
 
     def _update_dhats(self):
@@ -272,21 +272,21 @@ class NMDS(Ordination):
         self._squared_diff_sums = diffs.sum(axis=-1)
         self._total_squared_diff = self._squared_diff_sums.sum() / 2
         self._total_squared_dist = self._squared_dist_sums.sum() / 2
-        self.stress = sqrt(self._total_squared_diff/self._total_squared_dist)
+        self.stress = np.sqrt(self._total_squared_diff/self._total_squared_dist)
 
     def _nudged_stress(self, v, d, epsilon):
         """Calculates the stress with point v moved epsilon in the dth dimension
         """
-        delta_epsilon = zeros([self.dimension], float)
+        delta_epsilon = np.zeros([self.dimension], np.float64)
         delta_epsilon[d] = epsilon
         moved_point = self.points[v] + delta_epsilon
         squared_dists = ((moved_point - self.points)**2).sum(axis=-1)
         squared_dists[v] = 0.0
         delta_squared_dist = squared_dists.sum() - self._squared_dist_sums[v]
-        diffs = sqrt(squared_dists) - self._dhats[v]
+        diffs = np.sqrt(squared_dists) - self._dhats[v]
         diffs **= 2
         delta_squared_diff = diffs.sum() - self._squared_diff_sums[v]
-        return sqrt(
+        return np.sqrt(
             (self._total_squared_diff + delta_squared_diff) /
             (self._total_squared_dist + delta_squared_dist))
 
@@ -294,7 +294,7 @@ class NMDS(Ordination):
         """ assumes centered, rescales to mean ot-origin dist of 1
         """
 
-        factor = array([norm(vec) for vec in self.points]).mean()
+        factor = np.array([norm(vec) for vec in self.points]).mean()
         self.points = self.points/factor
 
     def _move_points(self):
@@ -320,7 +320,7 @@ class NMDS(Ordination):
             self._steep_descent_move()
 
         elif self.optimization_method == 1:
-            numrows, numcols = shape(self.points)
+            numrows, numcols = self.points.shape
             pts = self.points.ravel().copy()
 
             # odd behavior of scipy_optimize, possibly a bug there
@@ -360,8 +360,8 @@ class NMDS(Ordination):
         If a local minimum is larger than step_size, the algorithm cannot
         escape.
         """
-        num_rows, num_cols = shape(self.points)
-        avg_point_dist = sum([norm(point) for point in self.points])/num_rows
+        num_rows, num_cols = self.points.shape
+        avg_point_dist = np.sum([norm(point) for point in self.points])/num_rows
         step_size = avg_point_dist*rel_step_size
 
 
@@ -369,7 +369,7 @@ class NMDS(Ordination):
 
             # initial values
             prestep_stress = self.stress.copy()
-            gradient = zeros((num_rows, num_cols))
+            gradient = np.zeros((num_rows, num_cols))
 
             # get gradient
             for i in range(num_rows):
@@ -381,7 +381,7 @@ class NMDS(Ordination):
                     gradient[i,j] = delta_stress/step_size
                     self.points[i,j] -= step_size
 
-            grad_mag = norm(gradient)
+            grad_mag = np.linalg.norm(gradient)
 
             # step in the direction of the negative gradient
             for i in range(num_rows):
@@ -416,9 +416,9 @@ class NMDS(Ordination):
 
     def _calc_stress_gradients(self, pts):
         """Approx first derivatives of stress at pts, for optimisers"""
-        epsilon = sqrt(finfo(float).eps)
+        epsilon = np.sqrt(np.finfo(np.float64).eps)
         f0 = self._recalc_stress_from_pts(pts)
-        grad = zeros(pts.shape, float)
+        grad = np.zeros(pts.shape, float)
         for k in range(len(pts)):
             (point, dim) = divmod(k, self.dimension)
             f1 = self._nudged_stress(point, dim, epsilon)
