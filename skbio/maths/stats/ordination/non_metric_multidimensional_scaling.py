@@ -14,6 +14,7 @@ import numpy as np
 from scipy import optimize
 
 from .base import Ordination, OrdinationResults
+from .principal_coordinate_analysis import PCoA
 
 
 class NMDS(Ordination):
@@ -94,10 +95,9 @@ class NMDS(Ordination):
         if initial_pts == "random":
             self.points = self._get_initial_pts(dimension, point_range)
         elif initial_pts == "pcoa":
-            pcoa_pts, pcoa_eigs = principal_coordinates_analysis(distance_matrix)
-            order = np.argsort(pcoa_eigs)[::-1] # pos to small/neg
-            pcoa_pts = pcoa_pts[order].T
-            self.points = pcoa_pts[:,:dimension]
+            res = PCoA(distance_matrix).scores()
+            pcoa_pts = res.site
+            self.points = pcoa_pts[:, :dimension]
         else:
             self.points = initial_pts
         self.points = self._center(self.points)
