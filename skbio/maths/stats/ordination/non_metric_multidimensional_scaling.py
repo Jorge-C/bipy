@@ -125,7 +125,7 @@ class NMDS(Ordination):
 
             if (self.stresses[-1] < self.min_abs_stress):
                 if self.verbosity >= 1:
-                    print "stress below cutoff, done"
+                    print("stress below cutoff, done")
                 break
             self._move_points()
             self._calc_distances()
@@ -136,7 +136,7 @@ class NMDS(Ordination):
             if (self.stresses[-2]-self.stresses[-1]) / self.stresses[-2] <\
                 self.min_rel_improvement:
                 if self.verbosity >= 1:
-                    print "iteration improvement minimal. converged."
+                    print("iteration improvement minimal. converged.")
                 break
 
         # center and rotate the points, since pos, rotation is arbitrary
