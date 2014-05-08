@@ -21,6 +21,7 @@ import pandas as pd
 from IPython.display import Image, SVG
 from nose.tools import assert_is_instance, assert_raises_regexp, assert_true
 from scipy.spatial.distance import pdist
+import nose.tools as nt
 
 from skbio import DistanceMatrix
 from skbio.stats.ordination import (
@@ -882,7 +883,7 @@ class TestNMDSResults(object):
         this is preliminary, better to check for convergence to similar states
         with random starting points enabled"""
         stress = self.nm.getStress()
-        self.assertLessThan(stress, 1e-1)
+        nt.assert_less(stress, 1e-1)
 
     def test_getPoints(self):
         """points should be of the right number and dimensionality
@@ -890,8 +891,8 @@ class TestNMDSResults(object):
         this is preliminary, better to check for convergence to similar states
         with random starting points enabled"""
         pts = self.nm.getPoints()
-        self.assertEqual(pts.shape[0], 4)
-        self.assertEqual(pts.shape[1], 2)
+        nt.assert_equal(pts.shape[0], 4)
+        nt.assert_equal(pts.shape[1], 2)
 
     def test_2(self):
         """l19 data should give stress below .13"""
@@ -917,11 +918,11 @@ class TestNMDSResults(object):
             [0,0,0,1,7,0,0,0,0]], 'float')
         distmtx = pdist(ptmtx, 'euclidean')
         nm = NMDS(distmtx, verbosity=0)
-        self.assertLessThan(nm.getStress(), .13)
+        nt.assert_less(nm.getStress(), .13)
 
     def test_3(self):
         """l19 data should give stress below .13 in multi-D"""
-        ptmtx = array(
+        ptmtx = np.array(
             [[7,1,0,0,0,0,0,0,0],
             [4,2,0,0,0,1,0,0,0],
             [2,4,0,0,0,1,0,0,0],
@@ -944,7 +945,7 @@ class TestNMDSResults(object):
         distmtx = pdist(ptmtx, 'euclidean')
         for dim in range(3,18):
             nm = NMDS(distmtx, verbosity=0, dimension=dim)
-            self.assertLessThan(nm.getStress(), .13)
+            nt.assert_less(nm.getStress(), .13)
 
     def test_metaNMDS(self):
         """l19 data should give stress below .13"""
@@ -970,7 +971,7 @@ class TestNMDSResults(object):
             [0,0,0,1,7,0,0,0,0]], 'float')
         distmtx = pdist(ptmtx, 'euclidean')
         nm = metaNMDS(1, distmtx, verbosity=0)
-        self.assertLessThan(nm.getStress(), .13)
+        nt.assert_less(nm.getStress(), .13)
 
 
 if __name__ == '__main__':
