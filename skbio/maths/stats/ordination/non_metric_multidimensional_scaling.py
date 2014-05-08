@@ -413,7 +413,7 @@ class NMDS(Ordination):
         pts here is a 1D numpy array"""
         pts = pts.reshape(self.points.shape)
 
-        changed = not all(pts == self.points)
+        changed = np.any(pts != self.points)
         self.points = pts
         if changed:
             self._calc_distances()
