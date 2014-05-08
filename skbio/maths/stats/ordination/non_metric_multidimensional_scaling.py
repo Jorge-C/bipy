@@ -223,7 +223,7 @@ class NMDS(Ordination):
 
     def _calc_distances(self):
         """Update distances between the points"""
-        diffv = self.points[np.newaxis, :, :] - self.points[:, newaxis, :]
+        diffv = self.points[np.newaxis, :, :] - self.points[:, np.newaxis, :]
         squared_dists = (diffv**2).sum(axis=-1)
         self._dists = np.sqrt(squared_dists)
         self._squared_dist_sums = squared_dists.sum(axis=-1)
