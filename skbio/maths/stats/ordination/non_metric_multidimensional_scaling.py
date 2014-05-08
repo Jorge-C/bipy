@@ -68,22 +68,22 @@ class NMDS(Ordination):
         self.min_rel_improvement = min_rel_improvement
         self.min_abs_stress = min_abs_stress
 
-        if dimension >= len(dissimilarity_mtx) - 1:
+        if dimension >= len(distance_matrix) - 1:
             raise RuntimeError("NMDS requires N-1 dimensions or fewer, "+\
              "where N is the number of samples, or rows in the dissim matrix"+\
              " got %s rows for a %s dimension NMDS" % \
-             (len(dissimilarity_mtx), dimension))
+                               (len(distance_matrix), dimension))
 
         if rand_seed != None:
             seed(rand_seed)
 
         self.verbosity = verbosity
-        num_points = len(dissimilarity_mtx)
+        num_points = len(distance_matrix)
         point_range = range(num_points)
         self.dimension = dimension
         self.optimization_method = optimization_method
 
-        self._calc_dissim_order(dissimilarity_mtx, point_range)
+        self._calc_dissim_order(distance_matrix, point_range)
         # sets self.order
         # note that in the rest of the code, only the order matters, the values
         # of the dissimilarity matrix aren't used
@@ -92,7 +92,7 @@ class NMDS(Ordination):
             self.points = self._get_initial_pts(dimension, point_range)
         elif initial_pts == "pcoa":
             pcoa_pts, pcoa_eigs = principal_coordinates_analysis(\
-                dissimilarity_mtx)
+                                                                 distance_matrix)
             order = argsort(pcoa_eigs)[::-1] # pos to small/neg
             pcoa_pts = pcoa_pts[order].T
             self.points = pcoa_pts[:,:dimension]
