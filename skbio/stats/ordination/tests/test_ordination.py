@@ -913,7 +913,7 @@ class TestNMDSResults(object):
             [0,0,0,4,2,0,0,0,4],
             [0,0,0,2,4,0,0,0,1],
             [0,0,0,1,7,0,0,0,0]], 'float')
-        distmtx = dist_euclidean(ptmtx)
+        distmtx = pdist(ptmtx, 'euclidean')
         nm = NMDS(distmtx, verbosity=0)
         self.assertLessThan(nm.getStress(), .13)
 
@@ -939,7 +939,7 @@ class TestNMDSResults(object):
             [0,0,0,4,2,0,0,0,4],
             [0,0,0,2,4,0,0,0,1],
             [0,0,0,1,7,0,0,0,0]], 'float')
-        distmtx = dist_euclidean(ptmtx)
+        distmtx = pdist(ptmtx, 'euclidean')
         for dim in range(3,18):
             nm = NMDS(distmtx, verbosity=0, dimension=dim)
             self.assertLessThan(nm.getStress(), .13)
@@ -966,7 +966,7 @@ class TestNMDSResults(object):
             [0,0,0,4,2,0,0,0,4],
             [0,0,0,2,4,0,0,0,1],
             [0,0,0,1,7,0,0,0,0]], 'float')
-        distmtx = dist_euclidean(ptmtx)
+        distmtx = pdist(ptmtx, 'euclidean')
         nm = metaNMDS(1, distmtx, verbosity=0)
         self.assertLessThan(nm.getStress(), .13)
 
