@@ -868,10 +868,12 @@ class TestNMDSErrors(object):
 
 class TestNMDSResults(object):
     def setup(self):
-        self.mtx = np.array([[0, 3, 4, 8],
-                             [3, 0, 1, 27],
-                             [4, 1, 0, 3.5],
-                             [8, 27, 3.5, 0]])
+        self.mtx = DistanceMatrix(
+            np.array([[0, 3, 4, 8],
+                      [3, 0, 1, 27],
+                      [4, 1, 0, 3.5],
+                      [8, 27, 3.5, 0]]),
+            [str(i) for i in range(4)])
         self.nm = NMDS(self.mtx, verbosity=0)
 
     def test_getStress(self):
