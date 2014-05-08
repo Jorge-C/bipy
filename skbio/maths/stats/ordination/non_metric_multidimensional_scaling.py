@@ -9,6 +9,7 @@
 from __future__ import absolute_import, division, print_function
 
 import numpy as np
+from scipy import optimize
 
 from .base import Ordination, OrdinationResults
 
@@ -328,10 +329,14 @@ class NMDS(Ordination):
                 if maxiter <= 1:
                     raise RuntimeError("could not run scipy optimizer")
                 try:
-                    optpts = optimize.fmin_bfgs(
-                     self._recalc_stress_from_pts, pts,
-                     fprime=self._calc_stress_gradients,
-                     disp=self.verbosity, maxiter=maxiter, gtol=1e-3)
+                    optpts = optimize.minimize(
+                        self._recalc_stress_from_pts,
+                        pts,
+                        method="BFGS",
+                        jac=self._calc_stress_gradients,
+                        options={'disp': self.verbosity,
+                                 'maxiter': maxiter,
+                                 'gtol':1e-3})
                     break
                 except FloatingPointError:
                     # floor
