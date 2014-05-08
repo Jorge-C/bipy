@@ -45,17 +45,18 @@ class NMDS(Ordination):
         have nearly the same order as the input data
 
     Note: increasing MIN_ABS_STRESS causes nans to return from stress fn
+
+    Parameters
+    ==========
+    distance_matrix : DistanceMatrix
+        A distance matrix.
     """
 
-    def __init__(self, dissimilarity_mtx, initial_pts="pcoa",
+    def __init__(self, distance_matrix, initial_pts="pcoa",
         dimension=2, rand_seed=None, optimization_method=1, verbosity=1,
         max_iterations=50, setup_only=False, min_rel_improvement = 1e-3,
         min_abs_stress = 1e-5):
         """
-        Arguments:
-        - dissimilarity_mtx: an n by n numpy float array representing the
-        pairwise dissimilarity of items.  0 on diagonals, symmetric under
-        (i,j) -> (j,i)
         - initial_pts: "random" => random starting points, "pcoa" =>
         pts from pcoa, or a numpy 2d array, ncols = dimension
         - dimension: the desired dimension k of the constructed
