@@ -8,6 +8,8 @@
 
 from __future__ import absolute_import, division, print_function
 
+from operator import itemgetter
+
 import numpy as np
 from scipy import optimize
 
