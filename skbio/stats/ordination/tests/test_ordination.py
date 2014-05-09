@@ -18,9 +18,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.testing as npt
 import pandas as pd
+from scipy.spatial.distance import pdist, squareform
 from IPython.display import Image, SVG
 from nose.tools import assert_is_instance, assert_raises_regexp, assert_true
-from scipy.spatial.distance import pdist
 import nose.tools as nt
 
 from skbio import DistanceMatrix
@@ -916,7 +916,8 @@ class TestNMDSResults(object):
             [0,0,0,4,2,0,0,0,4],
             [0,0,0,2,4,0,0,0,1],
             [0,0,0,1,7,0,0,0,0]], 'float')
-        distmtx = pdist(ptmtx, 'euclidean')
+        distmtx = DistanceMatrix(squareform(pdist(ptmtx, 'euclidean')),
+                                 [str(i) for i in range(len(ptmtx))])
         nm = NMDS(distmtx, verbosity=0)
         nt.assert_less(nm.getStress(), .13)
 
@@ -942,7 +943,8 @@ class TestNMDSResults(object):
             [0,0,0,4,2,0,0,0,4],
             [0,0,0,2,4,0,0,0,1],
             [0,0,0,1,7,0,0,0,0]], 'float')
-        distmtx = pdist(ptmtx, 'euclidean')
+        distmtx = DistanceMatrix(squareform(pdist(ptmtx, 'euclidean')),
+                                 [str(i) for i in range(len(ptmtx))])
         for dim in range(3,18):
             nm = NMDS(distmtx, verbosity=0, dimension=dim)
             nt.assert_less(nm.getStress(), .13)
@@ -969,7 +971,8 @@ class TestNMDSResults(object):
             [0,0,0,4,2,0,0,0,4],
             [0,0,0,2,4,0,0,0,1],
             [0,0,0,1,7,0,0,0,0]], 'float')
-        distmtx = pdist(ptmtx, 'euclidean')
+        distmtx = DistanceMatrix(squareform(pdist(ptmtx, 'euclidean')),
+                                 [str(i) for i in range(len(ptmtx))])
         nm = metaNMDS(1, distmtx, verbosity=0)
         nt.assert_less(nm.getStress(), .13)
 
