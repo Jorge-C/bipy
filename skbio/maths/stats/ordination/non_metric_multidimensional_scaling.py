@@ -430,3 +430,21 @@ class NMDS(Ordination):
             f1 = self._nudged_stress(point, dim, epsilon)
             grad[k] = (f1 - f0)/epsilon
         return grad
+
+def metaNMDS(iters, *args, **kwargs):
+    """ runs NMDS, first with pcoa init, then iters times with random init
+
+    returns NMDS object with lowest stress
+    args, kwargs is passed to NMDS(), but must not have initial_pts
+    must supply distance matrix
+    """
+    results = []
+    kwargs['initial_pts'] = "pcoa"
+    res1 = NMDS(*args,**kwargs)
+    results.append(res1)
+    kwargs['initial_pts'] = "random"
+    for i in range(iters):
+        results.append(NMDS(*args, **kwargs))
+    stresses = [nmds.getStress() for nmds in results]
+    bestidx = stresses.index(min(stresses))
+    return results[bestidx]
