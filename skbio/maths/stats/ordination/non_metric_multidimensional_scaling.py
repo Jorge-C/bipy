@@ -217,9 +217,9 @@ class NMDS(Ordination):
         """
 
         # nested list comprehension.  Too dense for good readability?
-        points = [[random_gauss(0., 1) for axis in range(dimension)] \
-            for pt_idx in pt_range]
-        return array(points, 'd')
+        points = [[np.random.normal(0, 1) for axis in range(dimension)]
+                  for pt_idx in pt_range]
+        return np.array(points, np.float64)
 
     def _calc_distances(self):
         """Update distances between the points"""
