@@ -27,6 +27,7 @@ from skbio import DistanceMatrix
 from skbio.stats.ordination import (
     CA, RDA, CCA, PCoA, NMDS, OrdinationResults, corr, mean_and_std,
     assert_ordination_results_equal)
+from skbio.stats.ordination._non_metric_multidimensional_scaling import metaNMDS
 from skbio.util import get_data_path
 
 
