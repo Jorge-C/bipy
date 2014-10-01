@@ -18,6 +18,7 @@ Classes
    CA
    RDA
    CCA
+   NMDS
    OrdinationResults
 
 
@@ -111,12 +112,14 @@ from ._correspondence_analysis import CA
 from ._redundancy_analysis import RDA
 from ._canonical_correspondence_analysis import CCA
 from ._principal_coordinate_analysis import PCoA
+from ._non_metric_multidimensional_scaling import NMDS
 from ._base import OrdinationResults
 from ._utils import (mean_and_std, scale, svd_rank, corr,
                      assert_ordination_results_equal)
 
-__all__ = ['CA', 'RDA', 'CCA', 'PCoA', 'OrdinationResults', 'mean_and_std',
-           'scale', 'svd_rank', 'corr', 'assert_ordination_results_equal']
+__all__ = ['CA', 'RDA', 'CCA', 'PCoA', 'NMDS', 'OrdinationResults',
+           'mean_and_std', 'scale', 'svd_rank', 'corr',
+           'assert_ordination_results_equal']
 
 from numpy.testing import Tester
 test = Tester().test
