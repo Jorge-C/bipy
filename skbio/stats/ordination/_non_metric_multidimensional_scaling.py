@@ -13,8 +13,8 @@ from operator import itemgetter
 import numpy as np
 from scipy import optimize
 
-from .base import Ordination, OrdinationResults
-from .principal_coordinate_analysis import PCoA
+from ._base import Ordination, OrdinationResults
+from ._principal_coordinate_analysis import PCoA
 
 
 class NMDS(Ordination):
