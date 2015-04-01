@@ -100,6 +100,7 @@ References
    Amsterdam.
 
 """
+
 # ----------------------------------------------------------------------------
 # Copyright (c) 2013--, scikit-bio development team.
 #
@@ -107,6 +108,8 @@ References
 #
 # The full license is in the file COPYING.txt, distributed with this software.
 # ----------------------------------------------------------------------------
+
+from skbio.util import TestRunner
 
 from ._correspondence_analysis import CA
 from ._redundancy_analysis import RDA
@@ -121,5 +124,4 @@ __all__ = ['CA', 'RDA', 'CCA', 'PCoA', 'NMDS', 'OrdinationResults',
            'mean_and_std', 'scale', 'svd_rank', 'corr',
            'assert_ordination_results_equal']
 
-from numpy.testing import Tester
-test = Tester().test
+test = TestRunner(__file__).test
